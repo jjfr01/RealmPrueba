@@ -8,20 +8,58 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import com.example.superordenata.realmprueba.models.Nota;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private Realm realm;
+    private FloatingActionButton fab;
+    private EditText etTitle, etNota;
+    private RealmResults<Nota> result;
+
+    private void init(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        realm = Realm.getDefaultInstance();
+
+        fab = findViewById(R.id.fab);
+        etTitle = findViewById(R.id.etTitle);
+        etNota = findViewById(R.id.etNota);
+
+        result = realm.where(Nota.class).equalTo("id", 1).findAll();
+
+        etTitle.setText((result.size() > 0) ? result.get(0).getTitle() : "");
+        etNota.setText((result.size() > 0) ? result.get(0).getNote() : "");
+
+        event();
+    }
+
+    private void event(){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Nota nota;
+                        if(result.size() > 0){
+                            nota = result.get(0);
+                            nota.setTitle(etTitle.getText().toString());
+                            nota.setNote(etNota.getText().toString());
+                        } else {
+                            nota = new Nota(etTitle.getText().toString(), etNota.getText().toString());
+                        }
+                        realm.copyToRealmOrUpdate(nota);
+                    }
+                });
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -29,20 +67,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        init();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
