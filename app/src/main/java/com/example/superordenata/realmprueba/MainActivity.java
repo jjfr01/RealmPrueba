@@ -8,9 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.Toast;
 
+import com.example.superordenata.realmprueba.adaptars.GridAdapter;
 import com.example.superordenata.realmprueba.models.Nota;
+
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -21,21 +27,23 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private EditText etTitle, etNota;
     private RealmResults<Nota> result;
+    private GridView gridView;
 
     private void init(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         realm = Realm.getDefaultInstance();
 
         fab = findViewById(R.id.fab);
-        etTitle = findViewById(R.id.etTitle);
-        etNota = findViewById(R.id.etNota);
+        /*etTitle = findViewById(R.id.etTitle);
+        etNota = findViewById(R.id.etNota);*/
+        gridView = findViewById(R.id.gridView);
 
         result = realm.where(Nota.class).equalTo("id", 1).findAll();
 
-        etTitle.setText((result.size() > 0) ? result.get(0).getTitle() : "");
-        etNota.setText((result.size() > 0) ? result.get(0).getNote() : "");
+        /*etTitle.setText((result.size() > 0) ? result.get(0).getTitle() : "");
+        etNota.setText((result.size() > 0) ? result.get(0).getNote() : "");*/
 
         event();
     }
@@ -50,11 +58,15 @@ public class MainActivity extends AppCompatActivity {
                     public void execute(Realm realm) {
                         Nota nota;
                         if(result.size() > 0){
-                            nota = result.get(0);
+                            /*nota = result.get(0);
                             nota.setTitle(etTitle.getText().toString());
-                            nota.setNote(etNota.getText().toString());
+                            nota.setNote(etNota.getText().toString());*/
+                            nota = result.get(0);
+                            nota.setTitle("Prueba");
+                            nota.setNote("Hola");
                         } else {
-                            nota = new Nota(etTitle.getText().toString(), etNota.getText().toString());
+                            //nota = new Nota(etTitle.getText().toString(), etNota.getText().toString());
+                            nota = new Nota("Prueba", "Hola");
                         }
                         realm.copyToRealmOrUpdate(nota);
                     }
@@ -64,6 +76,17 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, "Click" + i, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        GridAdapter gridAdapter = new GridAdapter(this, R.layout.grid_item, result);
+        gridView.setAdapter(gridAdapter);
+
     }
 
     @Override
@@ -89,5 +112,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
