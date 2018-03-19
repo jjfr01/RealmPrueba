@@ -35,24 +35,28 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
                 android:text="Title"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tvDate"
+                app:layout_constraintEnd_toStartOf="@id/alarmButton"
                 app:layout_constraintHorizontal_bias="0.1"
-                app:layout_constraintEnd_toEndOf="@id/ctLayout"
                 app:layout_constraintStart_toStartOf="@id/ctLayout"
-                app:layout_constraintTop_toTopOf="@id/ctLayout"
-                app:layout_constraintBottom_toTopOf="@id/tvDate"/>
+                app:layout_constraintTop_toTopOf="@id/ctLayout" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
                 android:text="27-09-1994"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ctLayout"
+                app:layout_constraintEnd_toStartOf="@id/alarmButton"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"
-                app:layout_constraintBottom_toBottomOf="@id/ctLayout"/>
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <ImageView
                 android:id="@+id/alarmButton"
@@ -60,9 +64,9 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:src="@drawable/ic_bell"
+                app:layout_constraintBottom_toBottomOf="@id/ctLayout"
                 app:layout_constraintEnd_toEndOf="@id/ctLayout"
-                app:layout_constraintTop_toTopOf="@id/ctLayout"
-                app:layout_constraintBottom_toBottomOf="@id/ctLayout"/>
+                app:layout_constraintTop_toTopOf="@id/ctLayout" />
 
         </android.support.constraint.ConstraintLayout>
 

@@ -79,8 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 Toast.makeText(MainActivity.this, "Click" + i, Toast.LENGTH_SHORT).show();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        Nota nota = result.get(i);
+                        nota.deleteFromRealm();
+                    }
+                });
+
             }
         });
 

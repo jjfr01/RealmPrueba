@@ -44,6 +44,7 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
+
         ViewHolder holder;
 
         if (view == null) {
